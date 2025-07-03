@@ -1,1 +1,1 @@
-web: play run --http.port=$PORT $PLAY_OPTS
+web: java -Dhttp.port=$PORT -cp conf:precompiled/java:lib/* play.server.Server .
