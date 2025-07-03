@@ -1,1 +1,1 @@
-web: java -Dhttp.port=$PORT -Dfile.encoding=UTF-8 -cp "conf:lib/*:." play.server.Server .
+web: java -Dhttp.port=$PORT -cp "conf:target/dependency/*:." play.server.Server .
