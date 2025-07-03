@@ -44,7 +44,7 @@ public class RetrieveData extends Controller {
 			Application.index();
 		}
 		WSRequest req = WS.url(oauth.instance_url
-				+ "/services/data/v28.0/query/?q=%s", query);
+				+ "/services/data/v58.0/query/?q=%s", query);
 		req.headers.put("Authorization", "OAuth " + oauth.access_token);
 		HttpResponse response = req.get();
 
