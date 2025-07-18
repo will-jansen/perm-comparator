@@ -1,25 +1,43 @@
-Perm-Comparator
-===============
+# Perm Comparator (Modernized)
 
-### Compare Salesforce.com users, profiles, and permission sets  
-Goal: help SFDC admins and users determine what permission differences and similarities exist between users, profiles, and permission sets.
+This is a modernized version of the Salesforce Permission Comparator, now built with Spring Boot and Maven for easy deployment on Heroku.
 
-### App is live: https://perm-comparator.herokuapp.com
-1. Login to your Salesforce account using OAuth2
-2. When requested, authorize app to access your SFDC data
-3. Drag a User, Permission Set, or Profile to one of the empty columns
-4. Repeat for addition users, permission sets, or profiles
-5. Navigate the common, unique, and differing perms in the middle panel
+## Features
+- Compare Salesforce users, profiles, and permission sets
+- OAuth2 login with Salesforce (not yet implemented)
+- Modern Java 17, Spring Boot 3.x
+- Deployable to Heroku with a single click
 
-### Video demo
-Dreamforce 2013: http://www.youtube.com/watch?v=iZMH7yqJGo4&feature=youtu.be&t=38m4s
+## API Endpoints (Stubbed)
+- `/api/users` - List users
+- `/api/permissionsets` - List permission sets
+- `/api/profiles` - List profiles
+- `/api/compare/user` - Compare user permissions
+- `/api/compare/object` - Compare object permissions
+- `/api/compare/setupentity` - Compare setup entity access
 
-### Open source
-If you would like to fork or host your own instance of the app, feel free to clone the repo and set up a local server or deploy Heroku.
+## Local Development
 
-### Local install
-To install and run on a local server, please see the instructions here:<br/>
-https://github.com/john-brock/perm-comparator/blob/master/LocalInstallInstructions.md
+1. Clone the repository
+2. Set Salesforce OAuth environment variables (see below)
+3. Build and run:
+   ```bash
+   mvn clean package
+   java -jar target/perm-comparator-1.0.0.jar
+   ```
 
-### Questions
-tweet me @_johnbrock or email _johnbrock@outlook.com  
+## Heroku Deployment
+
+1. Push to Heroku (ensure Java 17 is set in `system.properties`)
+2. Heroku will build with Maven and run the Spring Boot app
+3. Set Salesforce OAuth environment variables in Heroku config
+
+## Configuration
+
+Set the following environment variables:
+- `SALESFORCE_CLIENT_ID`
+- `SALESFORCE_CLIENT_SECRET`
+- `SALESFORCE_REDIRECT_URI`
+
+## License
+MIT  

@@ -1,1 +1,1 @@
-web: play run --http.port=$PORT $PLAY_OPTS
+web: java -Dserver.port=$PORT -jar target/perm-comparator-1.0.0.jar
