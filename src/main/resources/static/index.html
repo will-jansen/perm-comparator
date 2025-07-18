@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Perm Comparator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/ext-all.css">
+    <script src="/javascripts/jquery-1.6.4.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        #login-btn, #logout-btn { padding: 10px 20px; font-size: 16px; margin: 10px; }
+        #user-info { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Perm Comparator</h1>
+    <div id="auth-section">
+        <button id="login-btn" style="display:none;">Login with Salesforce</button>
+        <button id="logout-btn" style="display:none;">Logout</button>
+        <div id="user-info"></div>
+    </div>
+    <script>
+    function checkAuth() {
+        $.get('/api/oauth/me')
+            .done(function(data) {
+                $('#login-btn').hide();
+                $('#logout-btn').show();
+                $('#user-info').html('<b>Logged in as:</b> ' + (data.principal && data.principal.name ? data.principal.name : 'Salesforce User'));
+            })
+            .fail(function() {
+                $('#login-btn').show();
+                $('#logout-btn').hide();
+                $('#user-info').html('<b>Not logged in.</b>');
+            });
+    }
+    $(function() {
+        checkAuth();
+        $('#login-btn').click(function() {
+            $.get('/api/oauth/login').done(function(data) {
+                window.location.href = data.loginUrl;
+            });
+        });
+        $('#logout-btn').click(function() {
+            $.post('/api/oauth/logout').done(function() {
+                checkAuth();
+            });
+        });
+    });
+    </script>
+</body>
+</html> 
