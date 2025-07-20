@@ -19,25 +19,28 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<SalesforceUser>> getUsers(@RequestParam(required = false) String search,
-        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client) {
+        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client,
+        @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.oauth2.core.user.OAuth2User principal) {
         String accessToken = client.getAccessToken().getTokenValue();
-        String instanceUrl = (String) client.getAccessToken().getClaims().get("instance_url");
+        String instanceUrl = principal != null ? (String) principal.getAttributes().get("instance_url") : null;
         return ResponseEntity.ok(salesforceService.fetchUsers(search, accessToken, instanceUrl));
     }
 
     @GetMapping("/permissionsets")
     public ResponseEntity<List<SalesforcePermissionSet>> getPermissionSets(@RequestParam(required = false) String search,
-        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client) {
+        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client,
+        @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.oauth2.core.user.OAuth2User principal) {
         String accessToken = client.getAccessToken().getTokenValue();
-        String instanceUrl = (String) client.getAccessToken().getClaims().get("instance_url");
+        String instanceUrl = principal != null ? (String) principal.getAttributes().get("instance_url") : null;
         return ResponseEntity.ok(salesforceService.fetchPermissionSets(search, accessToken, instanceUrl));
     }
 
     @GetMapping("/profiles")
     public ResponseEntity<List<SalesforceProfile>> getProfiles(@RequestParam(required = false) String search,
-        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client) {
+        @RegisteredOAuth2AuthorizedClient("salesforce") OAuth2AuthorizedClient client,
+        @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.oauth2.core.user.OAuth2User principal) {
         String accessToken = client.getAccessToken().getTokenValue();
-        String instanceUrl = (String) client.getAccessToken().getClaims().get("instance_url");
+        String instanceUrl = principal != null ? (String) principal.getAttributes().get("instance_url") : null;
         return ResponseEntity.ok(salesforceService.fetchProfiles(search, accessToken, instanceUrl));
     }
 } 
