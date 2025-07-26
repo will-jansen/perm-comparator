@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Permission Comparison - Salesforce Permission Comparator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Salesforce Lightning Design System -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@salesforce-ux/design-system@2.25.1/assets/styles/salesforce-lightning-design-system.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+    <style>
+        body { 
+            background: #f3f3f3;
+            font-family: "Salesforce Sans", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .page-header {
+            background: white;
+            border-bottom: 1px solid #d8dde6;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #16325c;
+        }
+        .comparison-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+        }
+        .section-header {
+            border-bottom: 1px solid #d8dde6;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #16325c;
+            margin: 0;
+        }
+        .section-description {
+            color: #706e6b;
+            font-size: 0.875rem;
+            margin: 0.5rem 0 0 0;
+        }
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .selector-group {
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+        .selector-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #3e3e3c;
+            margin-bottom: 0.5rem;
+        }
+        .selector {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            background: white;
+            box-sizing: border-box;
+        }
+        .selector:focus {
+            outline: none;
+            border-color: #1589ee;
+            box-shadow: 0 0 0 1px #1589ee;
+        }
+        .compare-button {
+            background: #0176d3;
+            color: white;
+            border: 1px solid #0176d3;
+            border-radius: 4px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.2;
+            transition: background 0.15s ease-in-out;
+            width: 100%;
+            max-width: 200px;
+        }
+        .compare-button:hover {
+            background: #014486;
+            border-color: #014486;
+        }
+        .compare-button:disabled {
+            background: #d8dde6;
+            border-color: #d8dde6;
+            color: #706e6b;
+            cursor: not-allowed;
+        }
+        .results-section {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #706e6b;
+        }
+        .error {
+            background: #fef7f7;
+            border: 1px solid #c23934;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #c23934;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+        .success {
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #166534;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+        .back-link {
+            color: #0176d3;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-link::before {
+            content: "←";
+            margin-right: 0.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <a href="/" class="back-link">Back to Home</a>
+            <h1>Permission Comparison Tool</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- User Permission Comparison -->
+        <div class="comparison-section">
+            <div class="section-header">
+                <h2 class="section-title">👥 User Permission Comparison</h2>
+                <p class="section-description">Compare permissions between different Salesforce users</p>
+            </div>
+            
+            <div class="selector-grid" id="user-selectors">
+                <div class="selector-group">
+                    <label class="selector-label" for="user1">User 1 (Required)</label>
+                    <select class="selector" id="user1" required>
+                        <option value="">Loading users...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="user2">User 2 (Optional)</label>
+                    <select class="selector" id="user2">
+                        <option value="">Select a user...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="user3">User 3 (Optional)</label>
+                    <select class="selector" id="user3">
+                        <option value="">Select a user...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="user4">User 4 (Optional)</label>
+                    <select class="selector" id="user4">
+                        <option value="">Select a user...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="compare-button" id="compare-users" disabled>
+                Compare User Permissions
+            </button>
+            
+            <div id="user-results" class="results-section"></div>
+        </div>
+
+        <!-- Permission Set Comparison -->
+        <div class="comparison-section">
+            <div class="section-header">
+                <h2 class="section-title">🔐 Permission Set Comparison</h2>
+                <p class="section-description">Compare object-level permissions between permission sets</p>
+            </div>
+            
+            <div class="selector-grid" id="permset-selectors">
+                <div class="selector-group">
+                    <label class="selector-label" for="permset1">Permission Set 1 (Required)</label>
+                    <select class="selector" id="permset1" required>
+                        <option value="">Loading permission sets...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="permset2">Permission Set 2 (Optional)</label>
+                    <select class="selector" id="permset2">
+                        <option value="">Select a permission set...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="permset3">Permission Set 3 (Optional)</label>
+                    <select class="selector" id="permset3">
+                        <option value="">Select a permission set...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="permset4">Permission Set 4 (Optional)</label>
+                    <select class="selector" id="permset4">
+                        <option value="">Select a permission set...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="compare-button" id="compare-permsets" disabled>
+                Compare Object Permissions
+            </button>
+            
+            <div id="permset-results" class="results-section"></div>
+        </div>
+
+        <!-- Profile Comparison -->
+        <div class="comparison-section">
+            <div class="section-header">
+                <h2 class="section-title">👤 Profile Comparison</h2>
+                <p class="section-description">Compare setup entity permissions between profiles</p>
+            </div>
+            
+            <div class="selector-grid" id="profile-selectors">
+                <div class="selector-group">
+                    <label class="selector-label" for="profile1">Profile 1 (Required)</label>
+                    <select class="selector" id="profile1" required>
+                        <option value="">Loading profiles...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="profile2">Profile 2 (Optional)</label>
+                    <select class="selector" id="profile2">
+                        <option value="">Select a profile...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="profile3">Profile 3 (Optional)</label>
+                    <select class="selector" id="profile3">
+                        <option value="">Select a profile...</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label class="selector-label" for="profile4">Profile 4 (Optional)</label>
+                    <select class="selector" id="profile4">
+                        <option value="">Select a profile...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="compare-button" id="compare-profiles" disabled>
+                Compare Setup Entity Permissions
+            </button>
+            
+            <div id="profile-results" class="results-section"></div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        // Check authentication on page load
+        checkAuthAndRedirect();
+        
+        // Load data for selectors
+        loadUsers();
+        loadPermissionSets();
+        loadProfiles();
+        
+        // Enable/disable compare buttons based on selection
+        $('#user1').change(function() {
+            $('#compare-users').prop('disabled', !$(this).val());
+        });
+        
+        $('#permset1').change(function() {
+            $('#compare-permsets').prop('disabled', !$(this).val());
+        });
+        
+        $('#profile1').change(function() {
+            $('#compare-profiles').prop('disabled', !$(this).val());
+        });
+        
+        // Handle compare button clicks
+        $('#compare-users').click(function() {
+            compareUserPermissions();
+        });
+        
+        $('#compare-permsets').click(function() {
+            compareObjectPermissions();
+        });
+        
+        $('#compare-profiles').click(function() {
+            compareSetupEntityPermissions();
+        });
+    });
+
+    function checkAuthAndRedirect() {
+        $.get('/api/oauth/me')
+            .fail(function() {
+                // Not authenticated, redirect to home
+                window.location.href = '/';
+            });
+    }
+
+    function loadUsers() {
+        $.get('/api/users')
+            .done(function(users) {
+                populateSelector(['user1', 'user2', 'user3', 'user4'], users, 'Select a user...');
+            })
+            .fail(function() {
+                showError('user-selectors', 'Failed to load users. Please check your connection.');
+            });
+    }
+
+    function loadPermissionSets() {
+        $.get('/api/permissionsets')
+            .done(function(permsets) {
+                populateSelector(['permset1', 'permset2', 'permset3', 'permset4'], permsets, 'Select a permission set...');
+            })
+            .fail(function() {
+                showError('permset-selectors', 'Failed to load permission sets. Please check your connection.');
+            });
+    }
+
+    function loadProfiles() {
+        $.get('/api/profiles')
+            .done(function(profiles) {
+                populateSelector(['profile1', 'profile2', 'profile3', 'profile4'], profiles, 'Select a profile...');
+            })
+            .fail(function() {
+                showError('profile-selectors', 'Failed to load profiles. Please check your connection.');
+            });
+    }
+
+    function populateSelector(selectorIds, data, placeholder) {
+        selectorIds.forEach(function(selectorId) {
+            const selector = $('#' + selectorId);
+            selector.empty();
+            
+            if (selectorId.includes('1')) {
+                selector.append('<option value="">Select an item...</option>');
+            } else {
+                selector.append('<option value="">' + placeholder + '</option>');
+            }
+            
+            data.forEach(function(item) {
+                const displayName = item.name || item.label || item.id;
+                selector.append('<option value="' + item.id + '">' + displayName + '</option>');
+            });
+        });
+    }
+
+    function compareUserPermissions() {
+        const ids = getSelectedIds(['user1', 'user2', 'user3', 'user4']);
+        const params = buildComparisonParams(ids);
+        
+        showLoading('user-results', 'Comparing user permissions...');
+        
+        $.get('/api/compare/user' + params)
+            .done(function(result) {
+                showResults('user-results', result, 'User Permission Comparison Results');
+            })
+            .fail(function() {
+                showError('user-results', 'Failed to compare user permissions.');
+            });
+    }
+
+    function compareObjectPermissions() {
+        const ids = getSelectedIds(['permset1', 'permset2', 'permset3', 'permset4']);
+        const params = buildComparisonParams(ids);
+        
+        showLoading('permset-results', 'Comparing object permissions...');
+        
+        $.get('/api/compare/object' + params)
+            .done(function(result) {
+                showResults('permset-results', result, 'Object Permission Comparison Results');
+            })
+            .fail(function() {
+                showError('permset-results', 'Failed to compare object permissions.');
+            });
+    }
+
+    function compareSetupEntityPermissions() {
+        const ids = getSelectedIds(['profile1', 'profile2', 'profile3', 'profile4']);
+        const params = buildComparisonParams(ids);
+        
+        showLoading('profile-results', 'Comparing setup entity permissions...');
+        
+        $.get('/api/compare/setupentity' + params)
+            .done(function(result) {
+                showResults('profile-results', result, 'Setup Entity Permission Comparison Results');
+            })
+            .fail(function() {
+                showError('profile-results', 'Failed to compare setup entity permissions.');
+            });
+    }
+
+    function getSelectedIds(selectorIds) {
+        return selectorIds.map(function(id) {
+            return $('#' + id).val();
+        }).filter(function(val) {
+            return val !== '';
+        });
+    }
+
+    function buildComparisonParams(ids) {
+        let params = '?id1=' + encodeURIComponent(ids[0]);
+        if (ids[1]) params += '&id2=' + encodeURIComponent(ids[1]);
+        if (ids[2]) params += '&id3=' + encodeURIComponent(ids[2]);
+        if (ids[3]) params += '&id4=' + encodeURIComponent(ids[3]);
+        return params;
+    }
+
+    function showLoading(containerId, message) {
+        const container = $('#' + containerId);
+        container.html('<div class="loading">' + message + '</div>');
+        container.show();
+    }
+
+    function showResults(containerId, result, title) {
+        const container = $('#' + containerId);
+        container.html(
+            '<div class="section-header">' +
+                '<h3 class="section-title">' + title + '</h3>' +
+            '</div>' +
+            '<div class="success">Comparison completed successfully!</div>' +
+            '<pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; font-size: 0.875rem;">' +
+                result +
+            '</pre>'
+        );
+        container.show();
+    }
+
+    function showError(containerId, message) {
+        const container = $('#' + containerId);
+        if (containerId.includes('results')) {
+            container.html('<div class="error">' + message + '</div>');
+            container.show();
+        } else {
+            const errorDiv = $('<div class="error" style="margin-top: 1rem;">' + message + '</div>');
+            $('#' + containerId).after(errorDiv);
+        }
+    }
+    </script>
+</body>
+</html>
