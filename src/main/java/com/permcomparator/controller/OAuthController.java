@@ -15,6 +15,19 @@ import java.util.Map;
 @RequestMapping("/api/oauth")
 public class OAuthController {
 
+    @GetMapping("/config-check")
+    public ResponseEntity<?> configCheck() {
+        // Check if OAuth2 client credentials are configured
+        String clientId = System.getenv("SALESFORCE_CLIENT_ID");
+        String clientSecret = System.getenv("SALESFORCE_CLIENT_SECRET");
+        
+        boolean configured = clientId != null && !clientId.trim().isEmpty() && 
+                            !clientId.equals("demo") &&
+                            clientSecret != null && !clientSecret.trim().isEmpty() && 
+                            !clientSecret.equals("demo");
+        
+        return ResponseEntity.ok(Map.of("configured", configured));
+    }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) throws Exception {

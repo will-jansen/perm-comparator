@@ -197,16 +197,75 @@
     $(function() {
         checkAuth();
         
-        // Handle login buttons - direct redirect to OAuth2 endpoints
+        // Handle login buttons - check configuration first
         $('#login-production').click(function() {
             console.log('Production login button clicked');
-            window.location.href = '/oauth2/authorization/salesforce-prod';
+            // Check if OAuth2 is configured by trying to access the endpoint
+            $.get('/api/oauth/config-check')
+                .done(function(data) {
+                    if (data.configured) {
+                        window.location.href = '/oauth2/authorization/salesforce-prod';
+                    } else {
+                        showConfigurationError();
+                    }
+                })
+                .fail(function() {
+                    // If config check fails, try direct redirect anyway
+                    window.location.href = '/oauth2/authorization/salesforce-prod';
+                });
         });
         
         $('#login-sandbox').click(function() {
             console.log('Sandbox login button clicked');
-            window.location.href = '/oauth2/authorization/salesforce-sandbox';
+            // Check if OAuth2 is configured by trying to access the endpoint
+            $.get('/api/oauth/config-check')
+                .done(function(data) {
+                    if (data.configured) {
+                        window.location.href = '/oauth2/authorization/salesforce-sandbox';
+                    } else {
+                        showConfigurationError();
+                    }
+                })
+                .fail(function() {
+                    // If config check fails, try direct redirect anyway
+                    window.location.href = '/oauth2/authorization/salesforce-sandbox';
+                });
         });
+        
+        function showConfigurationError() {
+            // Show SLDS modal or alert for configuration
+            if (!document.getElementById('config-modal')) {
+                $('body').append(`
+                    <div id="config-modal" class="slds-scope">
+                        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <header class="slds-modal__header">
+                                    <h2 class="slds-text-heading_medium">Setup Required</h2>
+                                </header>
+                                <div class="slds-modal__content slds-p-around_medium">
+                                    <p>OAuth2 configuration is required before you can login.</p>
+                                    <p>You need to:</p>
+                                    <ol class="slds-list_ordered slds-m-left_large">
+                                        <li>Create a Salesforce Connected App</li>
+                                        <li>Set SALESFORCE_CLIENT_ID and SALESFORCE_CLIENT_SECRET environment variables</li>
+                                    </ol>
+                                </div>
+                                <footer class="slds-modal__footer">
+                                    <button class="slds-button slds-button_neutral" onclick="closeConfigModal()">Close</button>
+                                    <a href="/setup.html" class="slds-button slds-button_brand">Setup Instructions</a>
+                                </footer>
+                            </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </div>
+                `);
+            }
+            $('#config-modal').show();
+        }
+        
+        window.closeConfigModal = function() {
+            $('#config-modal').hide();
+        };
         
         // Handle logout
         $('#logout-btn').click(function() {
