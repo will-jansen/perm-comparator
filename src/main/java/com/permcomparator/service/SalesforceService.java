@@ -3,13 +3,10 @@ package com.permcomparator.service;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.HashMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.permcomparator.dto.SalesforceUser;
@@ -20,40 +17,9 @@ import java.util.ArrayList;
 @Service
 public class SalesforceService {
     private static final String API_VERSION = "v60.0";
-    private static final String TOKEN_ENDPOINT = "https://login.salesforce.com/services/oauth2/token";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public Map<String, String> authenticate(String clientId, String clientSecret, String instanceUrl) throws Exception {
-        // Use client credentials flow for server-to-server authentication
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "client_credentials");
-        params.add("client_id", clientId);
-        params.add("client_secret", clientSecret);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        
-        try {
-            ResponseEntity<String> response = restTemplate.postForEntity(TOKEN_ENDPOINT, request, String.class);
-            JsonNode tokenResponse = objectMapper.readTree(response.getBody());
-            
-            Map<String, String> tokens = new HashMap<>();
-            tokens.put("access_token", tokenResponse.path("access_token").asText());
-            tokens.put("instance_url", tokenResponse.path("instance_url").asText());
-            
-            if (tokenResponse.has("refresh_token")) {
-                tokens.put("refresh_token", tokenResponse.path("refresh_token").asText());
-            }
-            
-            return tokens;
-        } catch (Exception e) {
-            throw new Exception("Failed to authenticate with Salesforce: " + e.getMessage());
-        }
-    }
 
     // Example method to run a SOQL query
     public ResponseEntity<String> query(String instanceUrl, String accessToken, String soql) {

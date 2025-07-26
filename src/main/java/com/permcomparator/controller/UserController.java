@@ -5,9 +5,12 @@ import com.permcomparator.dto.SalesforcePermissionSet;
 import com.permcomparator.dto.SalesforceProfile;
 import com.permcomparator.service.SalesforceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -18,39 +21,45 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<SalesforceUser>> getUsers(@RequestParam(required = false) String search,
-                                                        HttpSession session) {
-        String accessToken = (String) session.getAttribute("salesforce_access_token");
-        String instanceUrl = (String) session.getAttribute("salesforce_instance_url");
+        @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
+        @AuthenticationPrincipal OAuth2User principal) {
         
-        if (accessToken == null || instanceUrl == null) {
+        if (client == null || principal == null) {
             return ResponseEntity.status(401).build();
         }
+        
+        String accessToken = client.getAccessToken().getTokenValue();
+        String instanceUrl = (String) principal.getAttributes().get("instance_url");
         
         return ResponseEntity.ok(salesforceService.fetchUsers(search, accessToken, instanceUrl));
     }
 
     @GetMapping("/permissionsets")
     public ResponseEntity<List<SalesforcePermissionSet>> getPermissionSets(@RequestParam(required = false) String search,
-                                                                           HttpSession session) {
-        String accessToken = (String) session.getAttribute("salesforce_access_token");
-        String instanceUrl = (String) session.getAttribute("salesforce_instance_url");
+        @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
+        @AuthenticationPrincipal OAuth2User principal) {
         
-        if (accessToken == null || instanceUrl == null) {
+        if (client == null || principal == null) {
             return ResponseEntity.status(401).build();
         }
+        
+        String accessToken = client.getAccessToken().getTokenValue();
+        String instanceUrl = (String) principal.getAttributes().get("instance_url");
         
         return ResponseEntity.ok(salesforceService.fetchPermissionSets(search, accessToken, instanceUrl));
     }
 
     @GetMapping("/profiles")
     public ResponseEntity<List<SalesforceProfile>> getProfiles(@RequestParam(required = false) String search,
-                                                              HttpSession session) {
-        String accessToken = (String) session.getAttribute("salesforce_access_token");
-        String instanceUrl = (String) session.getAttribute("salesforce_instance_url");
+        @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
+        @AuthenticationPrincipal OAuth2User principal) {
         
-        if (accessToken == null || instanceUrl == null) {
+        if (client == null || principal == null) {
             return ResponseEntity.status(401).build();
         }
+        
+        String accessToken = client.getAccessToken().getTokenValue();
+        String instanceUrl = (String) principal.getAttributes().get("instance_url");
         
         return ResponseEntity.ok(salesforceService.fetchProfiles(search, accessToken, instanceUrl));
     }

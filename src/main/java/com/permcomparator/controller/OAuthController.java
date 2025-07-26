@@ -1,68 +1,50 @@
 package com.permcomparator.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
-import com.permcomparator.service.SalesforceService;
 
 @RestController
 @RequestMapping("/api/oauth")
 public class OAuthController {
-    
-    @Autowired
-    private SalesforceService salesforceService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials, HttpSession session) {
-        try {
-            String clientId = credentials.get("clientId");
-            String clientSecret = credentials.get("clientSecret");
-            String instanceUrl = credentials.get("instanceUrl");
-            
-            if (clientId == null || clientSecret == null || instanceUrl == null) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Missing required credentials"));
-            }
-            
-            // Attempt OAuth flow with provided credentials
-            Map<String, String> tokens = salesforceService.authenticate(clientId, clientSecret, instanceUrl);
-            
-            // Store credentials and tokens in session
-            session.setAttribute("salesforce_client_id", clientId);
-            session.setAttribute("salesforce_client_secret", clientSecret);
-            session.setAttribute("salesforce_instance_url", instanceUrl);
-            session.setAttribute("salesforce_access_token", tokens.get("access_token"));
-            session.setAttribute("salesforce_refresh_token", tokens.get("refresh_token"));
-            
-            return ResponseEntity.ok(Map.of("message", "Login successful", "instanceUrl", instanceUrl));
-            
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Authentication failed: " + e.getMessage()));
-        }
+    @GetMapping("/login/production")
+    public ResponseEntity<?> loginProduction() {
+        return ResponseEntity.ok(Map.of("loginUrl", "/oauth2/authorization/salesforce-prod"));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
-        session.invalidate();
+    @GetMapping("/login/sandbox")
+    public ResponseEntity<?> loginSandbox() {
+        return ResponseEntity.ok(Map.of("loginUrl", "/oauth2/authorization/salesforce-sandbox"));
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) throws Exception {
+        request.logout();
         return ResponseEntity.ok(Map.of("message", "Logged out"));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> me(HttpSession session) {
-        String accessToken = (String) session.getAttribute("salesforce_access_token");
-        String instanceUrl = (String) session.getAttribute("salesforce_instance_url");
-        
-        if (accessToken == null || instanceUrl == null) {
+    public ResponseEntity<?> me(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient client,
+                                @AuthenticationPrincipal OAuth2User principal) {
+        if (client == null || principal == null) {
             return ResponseEntity.status(401).body(Map.of("error", "Not authenticated"));
         }
         
         return ResponseEntity.ok(Map.of(
                 "authenticated", true,
-                "instanceUrl", instanceUrl,
-                "hasAccessToken", true
+                "principal", principal.getAttributes(),
+                "accessToken", client.getAccessToken().getTokenValue(),
+                "refreshToken", client.getRefreshToken() != null ? client.getRefreshToken().getTokenValue() : null,
+                "instanceUrl", principal.getAttributes().get("instance_url"),
+                "client", client.getClientRegistration().getRegistrationId()
         ));
     }
 } 

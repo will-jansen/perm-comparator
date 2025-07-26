@@ -1,90 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Perm Comparator</title>
+    <title>Salesforce Permission Comparator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" href="/stylesheets/ext-all.css">
     <script src="/javascripts/jquery-1.6.4.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type="text"], input[type="password"], select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        .btn { padding: 12px 24px; font-size: 16px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0; }
-        .btn-primary { background-color: #0176D3; color: white; width: 100%; }
-        .btn-primary:hover { background-color: #014486; }
-        .btn-secondary { background-color: #6c757d; color: white; }
-        .btn-secondary:hover { background-color: #545b62; }
-        #user-info { margin-top: 20px; padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; }
-        .error { color: #dc3545; margin-top: 10px; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f0f0f0; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #4A90E2; font-size: 2.5em; margin: 0; }
+        .header h2 { color: #666; font-size: 1.2em; margin: 10px 0; }
+        .login-section { text-align: center; margin: 40px 0; }
+        .login-buttons { display: inline-block; }
+        .login-btn { 
+            display: inline-block; 
+            padding: 15px 30px; 
+            margin: 0 10px; 
+            font-size: 18px; 
+            font-weight: bold;
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+            border: none;
+        }
+        .login-production { background-color: #2ECC40; }
+        .login-production:hover { background-color: #27AE60; }
+        .login-sandbox { background-color: #3498DB; }
+        .login-sandbox:hover { background-color: #2980B9; }
+        .user-info { 
+            margin: 20px auto; 
+            padding: 20px; 
+            max-width: 600px; 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .logout-btn { 
+            background-color: #E74C3C; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .logout-btn:hover { background-color: #C0392B; }
+        .demo-info { 
+            text-align: center; 
+            margin-top: 40px; 
+            color: #666; 
+        }
+        .demo-info a { color: #4A90E2; text-decoration: none; }
+        .demo-info a:hover { text-decoration: underline; }
         .hidden { display: none; }
-        .org-type { margin: 10px 0; }
-        .org-type label { font-weight: normal; margin-left: 5px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Salesforce Permission Comparator</h1>
-        
-        <div id="login-form">
-            <h2>Connect to Salesforce</h2>
-            <p>Enter your Salesforce Connected App credentials to authenticate:</p>
-            
-            <form id="auth-form">
-                <div class="form-group">
-                    <label for="instanceType">Salesforce Environment:</label>
-                    <div class="org-type">
-                        <input type="radio" id="production" name="instanceType" value="https://login.salesforce.com" checked>
-                        <label for="production">Production</label>
-                    </div>
-                    <div class="org-type">
-                        <input type="radio" id="sandbox" name="instanceType" value="https://test.salesforce.com">
-                        <label for="sandbox">Sandbox</label>
-                    </div>
-                    <div class="org-type">
-                        <input type="radio" id="custom" name="instanceType" value="custom">
-                        <label for="custom">Custom Domain</label>
-                    </div>
-                </div>
-                
-                <div class="form-group hidden" id="custom-url-group">
-                    <label for="customUrl">Custom Salesforce URL:</label>
-                    <input type="text" id="customUrl" placeholder="https://yourcompany.my.salesforce.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="clientId">Client ID (Consumer Key):</label>
-                    <input type="text" id="clientId" required placeholder="3MVG9...">
-                </div>
-                
-                <div class="form-group">
-                    <label for="clientSecret">Client Secret (Consumer Secret):</label>
-                    <input type="password" id="clientSecret" required placeholder="Enter your client secret">
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Connect to Salesforce</button>
-                <div id="login-error" class="error"></div>
-            </form>
+    <div class="header">
+        <h1>PermComparator</h1>
+        <h2>Compare Salesforce.com Users, Profiles, and Permission Sets</h2>
+    </div>
+    
+    <div id="login-section" class="login-section">
+        <div class="login-buttons">
+            <button id="login-production" class="login-btn login-production">Login Production</button>
+            <button id="login-sandbox" class="login-btn login-sandbox">Login Sandbox</button>
         </div>
-        
-        <div id="authenticated-section" class="hidden">
-            <div id="user-info"></div>
-            <button id="logout-btn" class="btn btn-secondary">Logout</button>
-        </div>
+    </div>
+    
+    <div id="authenticated-section" class="user-info hidden">
+        <div id="user-info"></div>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+    
+    <div class="demo-info">
+        <p>For additional information: <a href="https://github.com/will-jansen/perm-comparator" target="_blank">GitHub Wiki</a></p>
     </div>
 
     <script>
     function checkAuth() {
         $.get('/api/oauth/me')
             .done(function(data) {
-                $('#login-form').addClass('hidden');
+                $('#login-section').addClass('hidden');
                 $('#authenticated-section').removeClass('hidden');
-                $('#user-info').html('<h3>✅ Connected to Salesforce</h3><p><strong>Instance:</strong> ' + data.instanceUrl + '</p>');
+                
+                const username = data.principal?.preferred_username || data.principal?.name || 'Salesforce User';
+                const instanceUrl = data.instanceUrl || data.principal?.instance_url || 'Unknown';
+                const environment = data.client?.includes('sandbox') ? 'Sandbox' : 'Production';
+                
+                $('#user-info').html(
+                    '<h3>✅ Connected to Salesforce ' + environment + '</h3>' +
+                    '<p><strong>User:</strong> ' + username + '</p>' +
+                    '<p><strong>Instance:</strong> ' + instanceUrl + '</p>'
+                );
             })
             .fail(function() {
-                $('#login-form').removeClass('hidden');
+                $('#login-section').removeClass('hidden');
                 $('#authenticated-section').addClass('hidden');
             });
     }
@@ -92,65 +104,31 @@
     $(function() {
         checkAuth();
         
-        // Handle custom URL toggle
-        $('input[name="instanceType"]').change(function() {
-            if ($(this).val() === 'custom') {
-                $('#custom-url-group').removeClass('hidden');
-            } else {
-                $('#custom-url-group').addClass('hidden');
-            }
+        // Handle login buttons
+        $('#login-production').click(function() {
+            $.get('/api/oauth/login/production').done(function(data) {
+                window.location.href = data.loginUrl;
+            });
         });
         
-        // Handle form submission
-        $('#auth-form').submit(function(e) {
-            e.preventDefault();
-            $('#login-error').text('');
-            
-            const instanceType = $('input[name="instanceType"]:checked').val();
-            let instanceUrl;
-            
-            if (instanceType === 'custom') {
-                instanceUrl = $('#customUrl').val();
-                if (!instanceUrl) {
-                    $('#login-error').text('Please enter a custom Salesforce URL');
-                    return;
-                }
-            } else {
-                instanceUrl = instanceType;
-            }
-            
-            const credentials = {
-                clientId: $('#clientId').val(),
-                clientSecret: $('#clientSecret').val(),
-                instanceUrl: instanceUrl
-            };
-            
-            $.ajax({
-                url: '/api/oauth/login',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(credentials),
-                success: function(data) {
-                    checkAuth();
-                },
-                error: function(xhr) {
-                    let errorMsg = 'Authentication failed';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMsg = xhr.responseJSON.error;
-                    }
-                    $('#login-error').text(errorMsg);
-                }
+        $('#login-sandbox').click(function() {
+            $.get('/api/oauth/login/sandbox').done(function(data) {
+                window.location.href = data.loginUrl;
             });
         });
         
         // Handle logout
         $('#logout-btn').click(function() {
-            $.post('/api/oauth/logout').done(function() {
-                checkAuth();
-                $('#auth-form')[0].reset();
-                $('#custom-url-group').addClass('hidden');
+            $.get('/api/oauth/logout').done(function() {
+                window.location.href = '/logout';
             });
         });
+        
+        // Show error message if present in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('error')) {
+            alert('Authentication failed. Please try again.');
+        }
     });
     </script>
 </body>

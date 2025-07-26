@@ -14,7 +14,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .anyRequest().permitAll()
+                .requestMatchers("/", "/index.html", "/login", "/javascripts/**", "/stylesheets/**", "/images/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/?error=true")
+            )
+            .logout(logout -> logout
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
             )
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions().deny());
