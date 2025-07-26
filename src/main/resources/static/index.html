@@ -3,80 +3,154 @@
 <head>
     <title>Salesforce Permission Comparator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/ext-all.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Salesforce Lightning Design System -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@salesforce-ux/design-system@2.25.1/assets/styles/salesforce-lightning-design-system.min.css">
     <script src="/javascripts/jquery-1.6.4.min.js"></script>
+    
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f0f0f0; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #4A90E2; font-size: 2.5em; margin: 0; }
-        .header h2 { color: #666; font-size: 1.2em; margin: 10px 0; }
-        .login-section { text-align: center; margin: 40px 0; }
-        .login-buttons { display: inline-block; }
-        .login-btn { 
-            display: inline-block; 
-            padding: 15px 30px; 
-            margin: 0 10px; 
-            font-size: 18px; 
-            font-weight: bold;
-            color: white; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            cursor: pointer;
-            border: none;
+        body { 
+            background-color: #f3f3f3; 
+            font-family: "Salesforce Sans", Arial, sans-serif;
         }
-        .login-production { background-color: #2ECC40; }
-        .login-production:hover { background-color: #27AE60; }
-        .login-sandbox { background-color: #3498DB; }
-        .login-sandbox:hover { background-color: #2980B9; }
-        .user-info { 
-            margin: 20px auto; 
-            padding: 20px; 
-            max-width: 600px; 
-            background: white; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        .slds-scope .custom-header {
+            background: linear-gradient(45deg, #1589ee, #0176d3);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
         }
-        .logout-btn { 
-            background-color: #E74C3C; 
-            color: white; 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer;
-            margin-top: 15px;
+        .slds-scope .custom-header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin: 0;
         }
-        .logout-btn:hover { background-color: #C0392B; }
-        .demo-info { 
-            text-align: center; 
-            margin-top: 40px; 
-            color: #666; 
+        .slds-scope .custom-header h2 {
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
         }
-        .demo-info a { color: #4A90E2; text-decoration: none; }
-        .demo-info a:hover { text-decoration: underline; }
-        .hidden { display: none; }
+        .slds-scope .login-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .slds-scope .demo-links {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .slds-scope .demo-links a {
+            color: #0176d3;
+            text-decoration: none;
+        }
+        .slds-scope .demo-links a:hover {
+            text-decoration: underline;
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>PermComparator</h1>
-        <h2>Compare Salesforce.com Users, Profiles, and Permission Sets</h2>
-    </div>
-    
-    <div id="login-section" class="login-section">
-        <div class="login-buttons">
-            <button id="login-production" class="login-btn login-production">Login Production</button>
-            <button id="login-sandbox" class="login-btn login-sandbox">Login Sandbox</button>
+    <div class="slds-scope">
+        <!-- Header Section -->
+        <div class="custom-header">
+            <h1>PermComparator</h1>
+            <h2>Compare Salesforce.com Users, Profiles, and Permission Sets</h2>
         </div>
-    </div>
-    
-    <div id="authenticated-section" class="user-info hidden">
-        <div id="user-info"></div>
-        <button id="logout-btn" class="logout-btn">Logout</button>
-    </div>
-    
-    <div class="demo-info">
-        <p>For additional information: <a href="https://github.com/will-jansen/perm-comparator" target="_blank">GitHub Wiki</a></p>
-        <p><strong>Login buttons not working?</strong> <a href="/setup.html">Click here for setup instructions</a></p>
+        
+        <!-- Main Container -->
+        <div class="slds-container_center slds-container_medium slds-p-horizontal_medium">
+            
+            <!-- Login Section -->
+            <div id="login-section" class="login-container">
+                <div class="slds-card slds-p-around_large">
+                    <div class="slds-text-align_center">
+                        <div class="slds-illustration slds-illustration_small">
+                            <div class="slds-m-bottom_medium">
+                                <svg class="slds-illustration__svg" viewBox="0 0 454 280" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="height: 120px;">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g transform="translate(-65.000000, -91.000000)">
+                                            <g>
+                                                <path d="M151.5,242 C144.5,242 139,236.5 139,229.5 C139,222.5 144.5,217 151.5,217 C158.5,217 164,222.5 164,229.5 C164,236.5 158.5,242 151.5,242 Z" fill="#1B96FF"></path>
+                                                <path d="M182.5,242 C175.5,242 170,236.5 170,229.5 C170,222.5 175.5,217 182.5,217 C189.5,217 195,222.5 195,229.5 C195,236.5 189.5,242 182.5,242 Z" fill="#1B96FF"></path>
+                                                <path d="M213.5,242 C206.5,242 201,236.5 201,229.5 C201,222.5 206.5,217 213.5,217 C220.5,217 226,222.5 226,229.5 C226,236.5 220.5,242 213.5,242 Z" fill="#1B96FF"></path>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <h3 class="slds-text-heading_medium slds-m-bottom_medium">Connect to Salesforce</h3>
+                        <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                            Choose your Salesforce environment to begin comparing permissions
+                        </p>
+                        
+                        <div class="slds-button-group" role="group">
+                            <button id="login-production" class="slds-button slds-button_brand slds-button_stretch slds-m-right_small">
+                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                    <use xlink:href="#utility-world"></use>
+                                </svg>
+                                Login Production
+                            </button>
+                            <button id="login-sandbox" class="slds-button slds-button_outline-brand slds-button_stretch slds-m-left_small">
+                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                    <use xlink:href="#utility-preview"></use>
+                                </svg>
+                                Login Sandbox
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Authenticated Section -->
+            <div id="authenticated-section" class="login-container hidden">
+                <div class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-utility-success" title="Connected">
+                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                        <use xlink:href="#utility-success"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                    <span class="slds-text-heading_small">Salesforce Connection</span>
+                                </h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div id="user-info"></div>
+                    </div>
+                    <div class="slds-card__footer">
+                        <div class="slds-text-align_center">
+                            <button id="logout-btn" class="slds-button slds-button_destructive">
+                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                    <use xlink:href="#utility-logout"></use>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Links -->
+            <div class="demo-links slds-m-top_large">
+                <div class="slds-text-align_center">
+                    <p class="slds-text-body_small slds-text-color_weak">
+                        For additional information: <a href="https://github.com/will-jansen/perm-comparator" target="_blank">GitHub Wiki</a>
+                    </p>
+                    <p class="slds-text-body_small">
+                        <strong>Login buttons not working?</strong> <a href="/setup.html">Click here for setup instructions</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -89,11 +163,29 @@
                 const username = data.principal?.preferred_username || data.principal?.name || 'Salesforce User';
                 const instanceUrl = data.instanceUrl || data.principal?.instance_url || 'Unknown';
                 const environment = data.client?.includes('sandbox') ? 'Sandbox' : 'Production';
+                const orgId = data.principal?.organization_id || 'Unknown';
                 
                 $('#user-info').html(
-                    '<h3>✅ Connected to Salesforce ' + environment + '</h3>' +
-                    '<p><strong>User:</strong> ' + username + '</p>' +
-                    '<p><strong>Instance:</strong> ' + instanceUrl + '</p>'
+                    '<div class="slds-grid slds-gutters">' +
+                        '<div class="slds-col slds-size_1-of-1">' +
+                            '<div class="slds-form-element">' +
+                                '<label class="slds-form-element__label">Connected Environment</label>' +
+                                '<div class="slds-form-element__control">' +
+                                    '<span class="slds-badge slds-badge_success">Salesforce ' + environment + '</span>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="slds-col slds-size_1-of-1 slds-m-top_small">' +
+                            '<dl class="slds-list_horizontal slds-wrap">' +
+                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Username">Username:</dt>' +
+                                '<dd class="slds-item_detail slds-truncate">' + username + '</dd>' +
+                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Instance URL">Instance:</dt>' +
+                                '<dd class="slds-item_detail slds-truncate">' + instanceUrl + '</dd>' +
+                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Organization ID">Org ID:</dt>' +
+                                '<dd class="slds-item_detail slds-truncate">' + orgId + '</dd>' +
+                            '</dl>' +
+                        '</div>' +
+                    '</div>'
                 );
             })
             .fail(function() {

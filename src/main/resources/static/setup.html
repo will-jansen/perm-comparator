@@ -3,91 +3,236 @@
 <head>
     <title>Setup Required - Salesforce Permission Comparator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Salesforce Lightning Design System -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@salesforce-ux/design-system@2.25.1/assets/styles/salesforce-lightning-design-system.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #E74C3C; text-align: center; }
-        h2 { color: #333; border-bottom: 2px solid #3498DB; padding-bottom: 10px; }
-        .step { margin: 20px 0; padding: 15px; background: #f8f9fa; border-left: 4px solid #3498DB; }
-        .code { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 4px; font-family: monospace; margin: 10px 0; }
-        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 4px; margin: 15px 0; }
-        .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin: 15px 0; }
-        ol { line-height: 1.6; }
-        a { color: #3498DB; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        body { 
+            background-color: #f3f3f3; 
+            font-family: "Salesforce Sans", Arial, sans-serif;
+        }
+        .slds-scope .custom-header {
+            background: linear-gradient(45deg, #c23934, #e74c3c);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+        .slds-scope .custom-header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin: 0;
+        }
+        .slds-scope .code-block {
+            background: #16325c;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>⚙️ Setup Required</h1>
-        <p><strong>Your Salesforce Permission Comparator needs to be configured with a Salesforce Connected App before you can use OAuth2 login.</strong></p>
+    <div class="slds-scope">
+        <!-- Header Section -->
+        <div class="custom-header">
+            <h1>⚙️ Setup Required</h1>
+        </div>
         
-        <h2>🔧 Step 1: Create a Salesforce Connected App</h2>
-        <ol>
-            <li>Log into your Salesforce org</li>
-            <li>Go to <strong>Setup</strong> → <strong>App Manager</strong></li>
-            <li>Click <strong>"New Connected App"</strong></li>
-            <li>Fill in the basic information:
-                <ul>
-                    <li><strong>Connected App Name:</strong> Permission Comparator</li>
-                    <li><strong>API Name:</strong> Permission_Comparator</li>
-                    <li><strong>Contact Email:</strong> Your email</li>
-                </ul>
-            </li>
-            <li>Enable <strong>"Enable OAuth Settings"</strong></li>
-            <li>Set <strong>Callback URL</strong> to:
-                <div class="code">https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-prod<br>
+        <!-- Main Container -->
+        <div class="slds-container_center slds-container_large slds-p-horizontal_medium">
+            
+            <!-- Introduction Alert -->
+            <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_large" role="alert">
+                <span class="slds-assistive-text">warning</span>
+                <h2 class="slds-text-heading_small">
+                    Your Salesforce Permission Comparator needs to be configured with a Salesforce Connected App before you can use OAuth2 login.
+                </h2>
+            </div>
+            
+            <!-- Step 1: Create Connected App -->
+            <div class="slds-card slds-m-bottom_large">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-utility-setup" title="Setup">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xlink:href="#utility-setup"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small">🔧 Step 1: Create a Salesforce Connected App</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <ol class="slds-list_ordered">
+                        <li class="slds-m-bottom_small">Log into your Salesforce org</li>
+                        <li class="slds-m-bottom_small">Go to <strong>Setup</strong> → <strong>App Manager</strong></li>
+                        <li class="slds-m-bottom_small">Click <strong>"New Connected App"</strong></li>
+                        <li class="slds-m-bottom_small">Fill in the basic information:
+                            <ul class="slds-list_dotted slds-m-left_large slds-m-top_x-small">
+                                <li><strong>Connected App Name:</strong> Permission Comparator</li>
+                                <li><strong>API Name:</strong> Permission_Comparator</li>
+                                <li><strong>Contact Email:</strong> Your email</li>
+                            </ul>
+                        </li>
+                        <li class="slds-m-bottom_small">Enable <strong>"Enable OAuth Settings"</strong></li>
+                        <li class="slds-m-bottom_small">Set <strong>Callback URL</strong> to:
+                            <div class="code-block slds-m-top_small">https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-prod<br>
 https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-sandbox</div>
-            </li>
-            <li>Select <strong>OAuth Scopes:</strong>
-                <ul>
-                    <li>Full access (full)</li>
-                    <li>Refresh token (refresh_token)</li>
-                </ul>
-            </li>
-            <li>Save and continue</li>
-        </ol>
-
-        <h2>🔑 Step 2: Get Your Connected App Credentials</h2>
-        <div class="step">
-            <p>After creating the Connected App:</p>
-            <ol>
-                <li>Go to <strong>App Manager</strong> and find your app</li>
-                <li>Click <strong>"View"</strong> on your Connected App</li>
-                <li>Copy the <strong>Consumer Key</strong> (this is your CLIENT_ID)</li>
-                <li>Copy the <strong>Consumer Secret</strong> (this is your CLIENT_SECRET)</li>
-            </ol>
-        </div>
-
-        <h2>🌐 Step 3: Configure Heroku Environment Variables</h2>
-        <p>Run these commands in your terminal:</p>
-        <div class="code">heroku config:set SALESFORCE_CLIENT_ID="your_consumer_key_here" --app perm-comparator-reloaded<br>
+                        </li>
+                        <li class="slds-m-bottom_small">Select <strong>OAuth Scopes:</strong>
+                            <ul class="slds-list_dotted slds-m-left_large slds-m-top_x-small">
+                                <li>Full access (full)</li>
+                                <li>Refresh token (refresh_token)</li>
+                            </ul>
+                        </li>
+                        <li>Save and continue</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Step 2: Get Credentials -->
+            <div class="slds-card slds-m-bottom_large">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-utility-key" title="Key">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xlink:href="#utility-key"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small">🔑 Step 2: Get Your Connected App Credentials</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-box slds-box_small slds-theme_shade">
+                        <p class="slds-m-bottom_small">After creating the Connected App:</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to <strong>App Manager</strong> and find your app</li>
+                            <li>Click <strong>"View"</strong> on your Connected App</li>
+                            <li>Copy the <strong>Consumer Key</strong> (this is your CLIENT_ID)</li>
+                            <li>Copy the <strong>Consumer Secret</strong> (this is your CLIENT_SECRET)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Configure Heroku -->
+            <div class="slds-card slds-m-bottom_large">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-utility-world" title="World">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xlink:href="#utility-world"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small">🌐 Step 3: Configure Heroku Environment Variables</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <p class="slds-m-bottom_small">Run these commands in your terminal:</p>
+                    <div class="code-block">heroku config:set SALESFORCE_CLIENT_ID="your_consumer_key_here" --app perm-comparator-reloaded<br>
 heroku config:set SALESFORCE_CLIENT_SECRET="your_consumer_secret_here" --app perm-comparator-reloaded</div>
-        
-        <div class="warning">
-            <strong>⚠️ Important:</strong> Replace "your_consumer_key_here" and "your_consumer_secret_here" with the actual values from your Connected App.
-        </div>
-
-        <h2>✅ Step 4: Test the Application</h2>
-        <div class="success">
-            Once you've completed the above steps:
-            <ol>
-                <li>Wait 1-2 minutes for Heroku to restart with the new environment variables</li>
-                <li><a href="/">Return to the main page</a></li>
-                <li>Click "Login Production" or "Login Sandbox"</li>
-                <li>You should be redirected to Salesforce for authentication</li>
-            </ol>
-        </div>
-
-        <h2>🐛 Troubleshooting</h2>
-        <ul>
-            <li><strong>Still not working?</strong> Check that your Connected App callback URLs exactly match the ones above</li>
-            <li><strong>Getting authorization errors?</strong> Make sure your Connected App has the correct OAuth scopes</li>
-            <li><strong>Need help?</strong> Check the <a href="https://github.com/will-jansen/perm-comparator">GitHub repository</a> for more information</li>
-        </ul>
-        
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="/" style="background: #3498DB; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none;">← Back to Main Page</a>
+                    
+                    <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-top_medium" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <h2 class="slds-text-heading_small">
+                            ⚠️ Important: Replace "your_consumer_key_here" and "your_consumer_secret_here" with the actual values from your Connected App.
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Test -->
+            <div class="slds-card slds-m-bottom_large">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-utility-success" title="Success">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xlink:href="#utility-success"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small">✅ Step 4: Test the Application</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-notify slds-notify_alert slds-alert_success" role="alert">
+                        <span class="slds-assistive-text">success</span>
+                        <div>
+                            <p class="slds-m-bottom_small">Once you've completed the above steps:</p>
+                            <ol class="slds-list_ordered">
+                                <li>Wait 1-2 minutes for Heroku to restart with the new environment variables</li>
+                                <li><a href="/" class="slds-text-link">Return to the main page</a></li>
+                                <li>Click "Login Production" or "Login Sandbox"</li>
+                                <li>You should be redirected to Salesforce for authentication</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Troubleshooting -->
+            <div class="slds-card slds-m-bottom_large">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-utility-bug" title="Bug">
+                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                    <use xlink:href="#utility-bug"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span class="slds-text-heading_small">🐛 Troubleshooting</span>
+                            </h2>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <ul class="slds-list_dotted">
+                        <li class="slds-m-bottom_small"><strong>Still not working?</strong> Check that your Connected App callback URLs exactly match the ones above</li>
+                        <li class="slds-m-bottom_small"><strong>Getting authorization errors?</strong> Make sure your Connected App has the correct OAuth scopes</li>
+                        <li><strong>Need help?</strong> Check the <a href="https://github.com/will-jansen/perm-comparator" class="slds-text-link">GitHub repository</a> for more information</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Back Button -->
+            <div class="slds-text-align_center slds-m-bottom_large">
+                <a href="/" class="slds-button slds-button_brand">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                        <use xlink:href="#utility-back"></use>
+                    </svg>
+                    Back to Main Page
+                </a>
+            </div>
         </div>
     </div>
 </body>

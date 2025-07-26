@@ -3,11 +3,12 @@
 A modernized web application for comparing Salesforce permissions across users, profiles, and permission sets. Built with Spring Boot 3.x and Java 17 for easy deployment on Heroku.
 
 ## Features
-- 🔐 **User-provided Authentication** - Users enter their own Salesforce Connected App credentials
-- 🏢 **Multi-Environment Support** - Production, Sandbox, and Custom Domain authentication
+- 🔐 **OAuth2 Authentication** - Standard Salesforce OAuth2 flow for secure authentication
+- 🏢 **Multi-Environment Support** - Production and Sandbox authentication
 - 👥 **User Comparison** - Compare permissions across Salesforce users
 - 🛡️ **Permission Set Analysis** - Analyze and compare permission sets
 - 📋 **Profile Comparison** - Compare profile-based permissions
+- 🎨 **Salesforce Lightning Design System** - Modern, responsive UI using official Salesforce SLDS
 - 🚀 **Heroku Ready** - One-click deployment to Heroku
 
 ## Live Demo
@@ -131,16 +132,19 @@ The application includes the necessary Heroku configuration:
 
 ### Technology Stack
 - **Backend**: Spring Boot 3.2.6, Java 17
-- **Security**: Spring Security (session-based authentication)
+- **Security**: Spring Security OAuth2 Client
 - **Build Tool**: Maven
 - **Deployment**: Heroku
-- **Frontend**: HTML, CSS, JavaScript (jQuery)
+- **Frontend**: Salesforce Lightning Design System (SLDS), HTML, JavaScript (jQuery)
 
 ### Authentication Flow
-1. User provides Salesforce Connected App credentials through web form
-2. Application uses OAuth 2.0 Client Credentials flow to authenticate with Salesforce
-3. Access tokens are stored in HTTP session
-4. Subsequent API calls use session-stored tokens
+1. User clicks "Login Production" or "Login Sandbox" button
+2. Application redirects to Salesforce OAuth2 authorization endpoint
+3. User authenticates with their Salesforce credentials
+4. Salesforce redirects back with authorization code
+5. Application exchanges code for access tokens
+6. Access tokens are stored in OAuth2 authorized client
+7. Subsequent API calls use OAuth2 client tokens
 
 ### Key Components
 - **Controllers**: Handle HTTP requests and responses
