@@ -47,9 +47,11 @@ public class ForceDotComOAuth2 extends Controller {
 	}
 
 	public static OAuthSession getOAuthSession() {
-		OAuthSession sess = (OAuthSession) Cache
-				.get(session.getId() + "-oauth");
-		return sess;
+		String sid = session.get("sid");
+		if (sid == null) {
+			return null;
+		}
+		return (OAuthSession) Cache.get(sid);
 	}
 
 	public static boolean login(String clientId, String sec, OAuthListner list, boolean sandboxLogin) {
@@ -101,26 +103,12 @@ public class ForceDotComOAuth2 extends Controller {
 	}
 
 	public static boolean logout() {
+		String sid = session.get("sid");
+		if (sid != null) {
+			Cache.delete(sid);
+		}
+		session.clear();
 		response.removeCookie("uid");
-		OAuthSession sess = (OAuthSession) Cache
-				.get(session.getId() + "-oauth");
-		boolean sandboxLogout = (Boolean) Cache.get(session.getId() + "-sandbox");
-		Map<String, Object> params = new HashMap();
-		params.put("token", sess.access_token);
-		HttpResponse revokeResponse = WS.url(sandboxLogout ? REVOKE_URL_sBox : REVOKE_URL).params(params).post();
-		if (!revokeResponse.success()) {
-			Logger.info("revoke response failed: " + revokeResponse.toString());
-		}
-		if (sess != null) {
-			Cache.safeDelete(session.getId() + "-oauth");
-//			Logger.info("cache removed in logout:");
-//			OAuthSession u = OAuthSession.get(sess.uid);
-//			Logger.info("persistent session in logout:" + u);
-//			if (u != null) {
-//				u.delete();
-//				Logger.warn("persistent session should not be present");
-//			}
-		}
 		return true;
 	}
 
@@ -191,7 +179,9 @@ public class ForceDotComOAuth2 extends Controller {
 				String id = s.idURL.substring(s.idURL.lastIndexOf('/') + 1);
 				s.uid = id;
 				
-				Cache.set(session.getId() + "-oauth", s);
+				String sid = UUID.randomUUID().toString();
+				Cache.set(sid, s, "30mn");
+				session.put("sid", sid);
 				Cache.set(session.getId() + "-sandbox", sandboxLogin);
 				
 				if (isPersistentSession()) {

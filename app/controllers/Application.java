@@ -64,7 +64,7 @@ public class Application extends Controller {
 	
 	// main function to render login or main page
 	public static void index() {
-		if ((OAuthSession) Cache.get(session.getId() + "-oauth") != null) {
+		if (ForceDotComOAuth2.isLoggedIn()) {
 			Logger.info("OAuth success - rendering index.html");
 			render("Application/index.html");
 		} else {
