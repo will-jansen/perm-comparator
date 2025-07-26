@@ -11,147 +11,353 @@
     
     <style>
         body { 
-            background-color: #f3f3f3; 
+            background: #f3f3f3;
             font-family: "Salesforce Sans", Arial, sans-serif;
-        }
-        .slds-scope .custom-header {
-            background: linear-gradient(45deg, #1589ee, #0176d3);
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-bottom: 2rem;
-        }
-        .slds-scope .custom-header h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
             margin: 0;
+            padding: 0;
         }
-        .slds-scope .custom-header h2 {
-            font-size: 1.125rem;
-            font-weight: 400;
-            margin: 0.5rem 0 0 0;
-            opacity: 0.9;
+        .login-page {
+            display: flex;
+            min-height: 100vh;
+            background: #f3f3f3;
         }
-        .slds-scope .login-container {
-            max-width: 600px;
-            margin: 0 auto;
+        #left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
-        .slds-scope .demo-links {
+        #wrap {
+            width: 100%;
+            max-width: 400px;
+        }
+        #main {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #wrapper {
+            padding: 2rem;
+        }
+        #logo_wrapper {
             text-align: center;
-            margin-top: 2rem;
+            margin-bottom: 1.5rem;
         }
-        .slds-scope .demo-links a {
+        .standard_logo {
+            height: 60px;
+            width: auto;
+        }
+        .zen-assistiveText {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        #header {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #16325c;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        .inputgroup {
+            margin-bottom: 1rem;
+        }
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            color: #3e3e3c;
+            margin-bottom: 0.25rem;
+            font-weight: 400;
+        }
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: white;
+            box-sizing: border-box;
+        }
+        .input:focus {
+            outline: none;
+            border-color: #1589ee;
+            box-shadow: 0 0 0 1px #1589ee;
+        }
+        .button {
+            display: inline-block;
+            background: #0176d3;
+            color: white;
+            border: 1px solid #0176d3;
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.2;
+            transition: background 0.15s ease-in-out;
+        }
+        .button:hover {
+            background: #014486;
+            border-color: #014486;
+        }
+        .button.primary {
+            background: #0176d3;
+            border-color: #0176d3;
+        }
+        .button.secondary {
+            background: white;
+            color: #0176d3;
+            border-color: #d8dde6;
+        }
+        .button.secondary:hover {
+            background: #f3f3f3;
+            color: #014486;
+        }
+        .wide {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .r4 {
+            border-radius: 4px;
+        }
+        .mb16 {
+            margin-bottom: 1rem;
+        }
+        .mt8 {
+            margin-top: 0.5rem;
+        }
+        .mt16 {
+            margin-top: 1rem;
+        }
+        .mt24 {
+            margin-top: 1.5rem;
+        }
+        .tc {
+            text-align: center;
+        }
+        .fl {
+            float: left;
+        }
+        .fr {
+            float: right;
+        }
+        .small {
+            font-size: 0.875rem;
+        }
+        .links {
+            border-top: 1px solid #d8dde6;
+            padding-top: 1rem;
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+        .remember {
+            margin: 1rem 0;
+        }
+        .remember input[type="checkbox"] {
+            margin-right: 0.5rem;
+            float: left;
+        }
+        .remember label {
+            display: block;
+            overflow: hidden;
+            font-size: 0.875rem;
+        }
+        #footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #d8dde6;
+            font-size: 0.75rem;
+            color: #706e6b;
+        }
+        #footer a {
             color: #0176d3;
             text-decoration: none;
         }
-        .slds-scope .demo-links a:hover {
+        #footer a:hover {
             text-decoration: underline;
         }
-        .hidden { display: none !important; }
+        .custom-login-form {
+            margin-top: 1rem;
+        }
+        .env-button {
+            margin-bottom: 0.5rem;
+        }
+        .gidr-text-break {
+            display: block;
+            text-align: center;
+            margin: 1.5rem 0 1rem;
+            color: #706e6b;
+            font-size: 0.875rem;
+            position: relative;
+        }
+        .gidr-text-break:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #d8dde6;
+            z-index: 1;
+        }
+        .gidr-text-break span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        .align-middle {
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        .hidden { 
+            display: none !important; 
+        }
+        .success-state {
+            text-align: center;
+            padding: 2rem;
+        }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #4bca81;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+        .user-info {
+            background: #f8f9fa;
+            border: 1px solid #d8dde6;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        .user-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .user-info-row:last-child {
+            margin-bottom: 0;
+        }
+        .user-info-label {
+            font-weight: 600;
+            color: #3e3e3c;
+        }
+        .user-info-value {
+            color: #706e6b;
+            word-break: break-all;
+        }
     </style>
 </head>
-<body>
-    <div class="slds-scope">
-        <!-- Header Section -->
-        <div class="custom-header">
-            <h1>PermComparator</h1>
-            <h2>Compare Salesforce.com Users, Profiles, and Permission Sets</h2>
-        </div>
-        
-        <!-- Main Container -->
-        <div class="slds-container_center slds-container_medium slds-p-horizontal_medium">
-            
-            <!-- Login Section -->
-            <div id="login-section" class="login-container">
-                <div class="slds-card slds-p-around_large">
-                    <div class="slds-text-align_center">
-                        <div class="slds-illustration slds-illustration_small">
-                            <div class="slds-m-bottom_medium">
-                                <svg class="slds-illustration__svg" viewBox="0 0 454 280" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="height: 120px;">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <g transform="translate(-65.000000, -91.000000)">
-                                            <g>
-                                                <path d="M151.5,242 C144.5,242 139,236.5 139,229.5 C139,222.5 144.5,217 151.5,217 C158.5,217 164,222.5 164,229.5 C164,236.5 158.5,242 151.5,242 Z" fill="#1B96FF"></path>
-                                                <path d="M182.5,242 C175.5,242 170,236.5 170,229.5 C170,222.5 175.5,217 182.5,217 C189.5,217 195,222.5 195,229.5 C195,236.5 189.5,242 182.5,242 Z" fill="#1B96FF"></path>
-                                                <path d="M213.5,242 C206.5,242 201,236.5 201,229.5 C201,222.5 206.5,217 213.5,217 C220.5,217 226,222.5 226,229.5 C226,236.5 220.5,242 213.5,242 Z" fill="#1B96FF"></path>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </svg>
+<body class="login-page">
+    <div id="left" class="pr">
+        <div id="wrap">
+            <div id="main">
+                <div id="wrapper">
+                    <!-- Logo Section -->
+                    <div id="logo_wrapper" class="standard_logo_wrapper mb24">
+                        <div style="height: 100%; display: table-cell; vertical-align: bottom;">
+                            <img aria-hidden="true" id="logo" class="standard_logo" src="https://login.salesforce.com/img/logo214.svg" alt="Salesforce" border="0" name="logo">
+                            <span class="zen-assistiveText">Salesforce</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Header -->
+                    <h2 id="header" class="mb12">Permission Comparator</h2>
+                    
+                    <!-- Content -->
+                    <div id="content">
+                        <!-- Login Form Section -->
+                        <div id="theloginform">
+                            <div class="custom-login-form">
+                                <h3 class="label mb16">Choose Your Environment</h3>
+                                <p class="small mb16" style="color: #706e6b;">Select your Salesforce environment to begin comparing permissions</p>
+                                
+                                <button id="login-production" class="button primary wide r4 mb16 env-button">
+                                    🌐 Login to Production
+                                </button>
+                                
+                                <button id="login-sandbox" class="button secondary wide r4 mb16 env-button">
+                                    🧪 Login to Sandbox
+                                </button>
+                                
+                                <div class="gidr-text-break">
+                                    <span>or</span>
+                                </div>
+                                
+                                <a href="/setup.html" class="button secondary wide r4">
+                                    <span class="align-middle">Setup Instructions</span>
+                                </a>
                             </div>
                         </div>
                         
-                        <h3 class="slds-text-heading_medium slds-m-bottom_medium">Connect to Salesforce</h3>
-                        <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
-                            Choose your Salesforce environment to begin comparing permissions
-                        </p>
-                        
-                        <div class="slds-button-group" role="group">
-                            <button id="login-production" class="slds-button slds-button_brand slds-button_stretch slds-m-right_small">
-                                🌐 Login Production
-                            </button>
-                            <button id="login-sandbox" class="slds-button slds-button_outline-brand slds-button_stretch slds-m-left_small">
-                                🧪 Login Sandbox
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Authenticated Section -->
-            <div id="authenticated-section" class="login-container hidden">
-                <div class="slds-card">
-                    <div class="slds-card__header slds-grid">
-                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                            <div class="slds-media__figure">
-                                <span class="slds-icon_container slds-icon-utility-success" title="Connected">
-                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                        <use xlink:href="#utility-success"></use>
+                        <!-- Authenticated Section -->
+                        <div id="authenticated-section" class="hidden">
+                            <div class="success-state">
+                                <div class="success-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                                     </svg>
-                                </span>
+                                </div>
+                                <h3 class="mb16">Successfully Connected</h3>
+                                <p class="small mb16" style="color: #706e6b;">You are now connected to Salesforce</p>
+                                
+                                <div id="user-info" class="user-info"></div>
+                                
+                                <button id="logout-btn" class="button secondary wide r4 mt16">
+                                    Logout
+                                </button>
+                                
+                                <div class="mt16">
+                                    <a href="/compare" class="button primary wide r4">
+                                        Start Comparing Permissions
+                                    </a>
+                                </div>
                             </div>
-                            <div class="slds-media__body">
-                                <h2 class="slds-card__header-title">
-                                    <span class="slds-text-heading_small">Salesforce Connection</span>
-                                </h2>
-                            </div>
-                        </header>
-                    </div>
-                    <div class="slds-card__body slds-card__body_inner">
-                        <div id="user-info"></div>
-                    </div>
-                    <div class="slds-card__footer">
-                        <div class="slds-text-align_center">
-                            <button id="logout-btn" class="slds-button slds-button_destructive">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xlink:href="#utility-logout"></use>
-                                </svg>
-                                Logout
-                            </button>
+                        </div>
+                        
+                        <!-- Help Section -->
+                        <div id="signup" class="tc mt24">
+                            <p class="small" style="color: #706e6b;">
+                                Need help? <a href="https://github.com/will-jansen/perm-comparator" target="_blank">View Documentation</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Help Links -->
-            <div class="demo-links slds-m-top_large">
-                <div class="slds-text-align_center">
-                    <p class="slds-text-body_small slds-text-color_weak">
-                        For additional information: <a href="https://github.com/will-jansen/perm-comparator" target="_blank">GitHub Wiki</a>
-                    </p>
-                    <p class="slds-text-body_small">
-                        <strong>Login buttons not working?</strong> <a href="/setup.html">Click here for setup instructions</a>
-                    </p>
-                </div>
-            </div>
         </div>
+    </div>
+    
+    <!-- Footer -->
+    <div id="footer">
+        © 2025 Permission Comparator. Built for Salesforce. | 
+        <a id="privacy-link" href="https://www.salesforce.com/company/privacy" target="_blank">Privacy</a>
     </div>
 
     <script>
     function checkAuth() {
         $.get('/api/oauth/me')
             .done(function(data) {
-                $('#login-section').addClass('hidden');
+                $('#theloginform').addClass('hidden');
                 $('#authenticated-section').removeClass('hidden');
                 
                 const username = data.principal?.preferred_username || data.principal?.name || 'Salesforce User';
@@ -160,30 +366,26 @@
                 const orgId = data.principal?.organization_id || 'Unknown';
                 
                 $('#user-info').html(
-                    '<div class="slds-grid slds-gutters">' +
-                        '<div class="slds-col slds-size_1-of-1">' +
-                            '<div class="slds-form-element">' +
-                                '<label class="slds-form-element__label">Connected Environment</label>' +
-                                '<div class="slds-form-element__control">' +
-                                    '<span class="slds-badge slds-badge_success">Salesforce ' + environment + '</span>' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="slds-col slds-size_1-of-1 slds-m-top_small">' +
-                            '<dl class="slds-list_horizontal slds-wrap">' +
-                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Username">Username:</dt>' +
-                                '<dd class="slds-item_detail slds-truncate">' + username + '</dd>' +
-                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Instance URL">Instance:</dt>' +
-                                '<dd class="slds-item_detail slds-truncate">' + instanceUrl + '</dd>' +
-                                '<dt class="slds-item_label slds-text-color_weak slds-truncate" title="Organization ID">Org ID:</dt>' +
-                                '<dd class="slds-item_detail slds-truncate">' + orgId + '</dd>' +
-                            '</dl>' +
-                        '</div>' +
+                    '<div class="user-info-row">' +
+                        '<span class="user-info-label">Environment:</span>' +
+                        '<span class="user-info-value">Salesforce ' + environment + '</span>' +
+                    '</div>' +
+                    '<div class="user-info-row">' +
+                        '<span class="user-info-label">Username:</span>' +
+                        '<span class="user-info-value">' + username + '</span>' +
+                    '</div>' +
+                    '<div class="user-info-row">' +
+                        '<span class="user-info-label">Instance:</span>' +
+                        '<span class="user-info-value">' + instanceUrl + '</span>' +
+                    '</div>' +
+                    '<div class="user-info-row">' +
+                        '<span class="user-info-label">Org ID:</span>' +
+                        '<span class="user-info-value">' + orgId + '</span>' +
                     '</div>'
                 );
             })
             .fail(function() {
-                $('#login-section').removeClass('hidden');
+                $('#theloginform').removeClass('hidden');
                 $('#authenticated-section').addClass('hidden');
             });
     }
@@ -196,18 +398,21 @@
         $(document).on('click', '#login-production', function(e) {
             e.preventDefault();
             console.log('Production login button clicked');
+            $(this).text('Connecting...');
             window.location.href = '/oauth2/authorization/salesforce-prod';
         });
         
         $(document).on('click', '#login-sandbox', function(e) {
             e.preventDefault();
             console.log('Sandbox login button clicked');
+            $(this).text('Connecting...');
             window.location.href = '/oauth2/authorization/salesforce-sandbox';
         });
         
         // Handle logout
         $(document).on('click', '#logout-btn', function(e) {
             e.preventDefault();
+            $(this).text('Logging out...');
             $.get('/api/oauth/logout').done(function() {
                 window.location.href = '/logout';
             });
@@ -216,7 +421,10 @@
         // Show error message if present in URL
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('error')) {
-            alert('Authentication failed. Please try again.');
+            // Create a more Salesforce-styled error message
+            const errorDiv = $('<div class="mt16" style="background: #fef7f7; border: 1px solid #c23934; border-radius: 4px; padding: 1rem; color: #c23934; font-size: 0.875rem;">')
+                .text('Authentication failed. Please try again.');
+            $('#theloginform').prepend(errorDiv);
         }
     });
     </script>
