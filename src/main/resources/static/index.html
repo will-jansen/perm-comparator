@@ -7,7 +7,7 @@
     
     <!-- Salesforce Lightning Design System -->
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@salesforce-ux/design-system@2.25.1/assets/styles/salesforce-lightning-design-system.min.css">
-    <script src="/javascripts/jquery-1.6.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     
     <style>
         body { 
@@ -88,16 +88,10 @@
                         
                         <div class="slds-button-group" role="group">
                             <button id="login-production" class="slds-button slds-button_brand slds-button_stretch slds-m-right_small">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xlink:href="#utility-world"></use>
-                                </svg>
-                                Login Production
+                                🌐 Login Production
                             </button>
                             <button id="login-sandbox" class="slds-button slds-button_outline-brand slds-button_stretch slds-m-left_small">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xlink:href="#utility-preview"></use>
-                                </svg>
-                                Login Sandbox
+                                🧪 Login Sandbox
                             </button>
                         </div>
                     </div>
@@ -194,81 +188,26 @@
             });
     }
 
-    $(function() {
+    $(document).ready(function() {
+        console.log('jQuery loaded, DOM ready');
         checkAuth();
         
-        // Handle login buttons - check configuration first
-        $('#login-production').click(function() {
+        // Handle login buttons with improved event handling
+        $(document).on('click', '#login-production', function(e) {
+            e.preventDefault();
             console.log('Production login button clicked');
-            // Check if OAuth2 is configured by trying to access the endpoint
-            $.get('/api/oauth/config-check')
-                .done(function(data) {
-                    if (data.configured) {
-                        window.location.href = '/oauth2/authorization/salesforce-prod';
-                    } else {
-                        showConfigurationError();
-                    }
-                })
-                .fail(function() {
-                    // If config check fails, try direct redirect anyway
-                    window.location.href = '/oauth2/authorization/salesforce-prod';
-                });
+            window.location.href = '/oauth2/authorization/salesforce-prod';
         });
         
-        $('#login-sandbox').click(function() {
+        $(document).on('click', '#login-sandbox', function(e) {
+            e.preventDefault();
             console.log('Sandbox login button clicked');
-            // Check if OAuth2 is configured by trying to access the endpoint
-            $.get('/api/oauth/config-check')
-                .done(function(data) {
-                    if (data.configured) {
-                        window.location.href = '/oauth2/authorization/salesforce-sandbox';
-                    } else {
-                        showConfigurationError();
-                    }
-                })
-                .fail(function() {
-                    // If config check fails, try direct redirect anyway
-                    window.location.href = '/oauth2/authorization/salesforce-sandbox';
-                });
+            window.location.href = '/oauth2/authorization/salesforce-sandbox';
         });
-        
-        function showConfigurationError() {
-            // Show SLDS modal or alert for configuration
-            if (!document.getElementById('config-modal')) {
-                $('body').append(`
-                    <div id="config-modal" class="slds-scope">
-                        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-                            <div class="slds-modal__container">
-                                <header class="slds-modal__header">
-                                    <h2 class="slds-text-heading_medium">Setup Required</h2>
-                                </header>
-                                <div class="slds-modal__content slds-p-around_medium">
-                                    <p>OAuth2 configuration is required before you can login.</p>
-                                    <p>You need to:</p>
-                                    <ol class="slds-list_ordered slds-m-left_large">
-                                        <li>Create a Salesforce Connected App</li>
-                                        <li>Set SALESFORCE_CLIENT_ID and SALESFORCE_CLIENT_SECRET environment variables</li>
-                                    </ol>
-                                </div>
-                                <footer class="slds-modal__footer">
-                                    <button class="slds-button slds-button_neutral" onclick="closeConfigModal()">Close</button>
-                                    <a href="/setup.html" class="slds-button slds-button_brand">Setup Instructions</a>
-                                </footer>
-                            </div>
-                        </section>
-                        <div class="slds-backdrop slds-backdrop_open"></div>
-                    </div>
-                `);
-            }
-            $('#config-modal').show();
-        }
-        
-        window.closeConfigModal = function() {
-            $('#config-modal').hide();
-        };
         
         // Handle logout
-        $('#logout-btn').click(function() {
+        $(document).on('click', '#logout-btn', function(e) {
+            e.preventDefault();
             $.get('/api/oauth/logout').done(function() {
                 window.location.href = '/logout';
             });
