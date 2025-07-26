@@ -106,15 +106,29 @@
         
         // Handle login buttons
         $('#login-production').click(function() {
-            $.get('/api/oauth/login/production').done(function(data) {
-                window.location.href = data.loginUrl;
-            });
+            console.log('Production login button clicked');
+            $.get('/api/oauth/login/production')
+                .done(function(data) {
+                    console.log('Production login response:', data);
+                    window.location.href = data.loginUrl;
+                })
+                .fail(function(xhr, status, error) {
+                    console.error('Production login failed:', xhr.responseText);
+                    alert('Login failed: ' + (xhr.responseJSON?.error || 'Please check if environment variables are set in Heroku'));
+                });
         });
         
         $('#login-sandbox').click(function() {
-            $.get('/api/oauth/login/sandbox').done(function(data) {
-                window.location.href = data.loginUrl;
-            });
+            console.log('Sandbox login button clicked');
+            $.get('/api/oauth/login/sandbox')
+                .done(function(data) {
+                    console.log('Sandbox login response:', data);
+                    window.location.href = data.loginUrl;
+                })
+                .fail(function(xhr, status, error) {
+                    console.error('Sandbox login failed:', xhr.responseText);
+                    alert('Login failed: ' + (xhr.responseJSON?.error || 'Please check if environment variables are set in Heroku'));
+                });
         });
         
         // Handle logout
