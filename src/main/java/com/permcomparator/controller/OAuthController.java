@@ -15,15 +15,6 @@ import java.util.Map;
 @RequestMapping("/api/oauth")
 public class OAuthController {
 
-    @GetMapping("/login/production")
-    public ResponseEntity<?> loginProduction() {
-        return ResponseEntity.ok(Map.of("loginUrl", "/oauth2/authorization/salesforce-prod"));
-    }
-
-    @GetMapping("/login/sandbox")
-    public ResponseEntity<?> loginSandbox() {
-        return ResponseEntity.ok(Map.of("loginUrl", "/oauth2/authorization/salesforce-sandbox"));
-    }
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) throws Exception {

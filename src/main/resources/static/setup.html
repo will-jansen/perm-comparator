@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Required - Salesforce Permission Comparator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #E74C3C; text-align: center; }
+        h2 { color: #333; border-bottom: 2px solid #3498DB; padding-bottom: 10px; }
+        .step { margin: 20px 0; padding: 15px; background: #f8f9fa; border-left: 4px solid #3498DB; }
+        .code { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 4px; font-family: monospace; margin: 10px 0; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        ol { line-height: 1.6; }
+        a { color: #3498DB; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Setup Required</h1>
+        <p><strong>Your Salesforce Permission Comparator needs to be configured with a Salesforce Connected App before you can use OAuth2 login.</strong></p>
+        
+        <h2>🔧 Step 1: Create a Salesforce Connected App</h2>
+        <ol>
+            <li>Log into your Salesforce org</li>
+            <li>Go to <strong>Setup</strong> → <strong>App Manager</strong></li>
+            <li>Click <strong>"New Connected App"</strong></li>
+            <li>Fill in the basic information:
+                <ul>
+                    <li><strong>Connected App Name:</strong> Permission Comparator</li>
+                    <li><strong>API Name:</strong> Permission_Comparator</li>
+                    <li><strong>Contact Email:</strong> Your email</li>
+                </ul>
+            </li>
+            <li>Enable <strong>"Enable OAuth Settings"</strong></li>
+            <li>Set <strong>Callback URL</strong> to:
+                <div class="code">https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-prod<br>
+https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-sandbox</div>
+            </li>
+            <li>Select <strong>OAuth Scopes:</strong>
+                <ul>
+                    <li>Full access (full)</li>
+                    <li>Refresh token (refresh_token)</li>
+                </ul>
+            </li>
+            <li>Save and continue</li>
+        </ol>
+
+        <h2>🔑 Step 2: Get Your Connected App Credentials</h2>
+        <div class="step">
+            <p>After creating the Connected App:</p>
+            <ol>
+                <li>Go to <strong>App Manager</strong> and find your app</li>
+                <li>Click <strong>"View"</strong> on your Connected App</li>
+                <li>Copy the <strong>Consumer Key</strong> (this is your CLIENT_ID)</li>
+                <li>Copy the <strong>Consumer Secret</strong> (this is your CLIENT_SECRET)</li>
+            </ol>
+        </div>
+
+        <h2>🌐 Step 3: Configure Heroku Environment Variables</h2>
+        <p>Run these commands in your terminal:</p>
+        <div class="code">heroku config:set SALESFORCE_CLIENT_ID="your_consumer_key_here" --app perm-comparator-reloaded<br>
+heroku config:set SALESFORCE_CLIENT_SECRET="your_consumer_secret_here" --app perm-comparator-reloaded</div>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> Replace "your_consumer_key_here" and "your_consumer_secret_here" with the actual values from your Connected App.
+        </div>
+
+        <h2>✅ Step 4: Test the Application</h2>
+        <div class="success">
+            Once you've completed the above steps:
+            <ol>
+                <li>Wait 1-2 minutes for Heroku to restart with the new environment variables</li>
+                <li><a href="/">Return to the main page</a></li>
+                <li>Click "Login Production" or "Login Sandbox"</li>
+                <li>You should be redirected to Salesforce for authentication</li>
+            </ol>
+        </div>
+
+        <h2>🐛 Troubleshooting</h2>
+        <ul>
+            <li><strong>Still not working?</strong> Check that your Connected App callback URLs exactly match the ones above</li>
+            <li><strong>Getting authorization errors?</strong> Make sure your Connected App has the correct OAuth scopes</li>
+            <li><strong>Need help?</strong> Check the <a href="https://github.com/will-jansen/perm-comparator">GitHub repository</a> for more information</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/" style="background: #3498DB; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none;">← Back to Main Page</a>
+        </div>
+    </div>
+</body>
+</html>

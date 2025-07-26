@@ -76,6 +76,7 @@
     
     <div class="demo-info">
         <p>For additional information: <a href="https://github.com/will-jansen/perm-comparator" target="_blank">GitHub Wiki</a></p>
+        <p><strong>Login buttons not working?</strong> <a href="/setup.html">Click here for setup instructions</a></p>
     </div>
 
     <script>
@@ -104,31 +105,15 @@
     $(function() {
         checkAuth();
         
-        // Handle login buttons
+        // Handle login buttons - direct redirect to OAuth2 endpoints
         $('#login-production').click(function() {
             console.log('Production login button clicked');
-            $.get('/api/oauth/login/production')
-                .done(function(data) {
-                    console.log('Production login response:', data);
-                    window.location.href = data.loginUrl;
-                })
-                .fail(function(xhr, status, error) {
-                    console.error('Production login failed:', xhr.responseText);
-                    alert('Login failed: ' + (xhr.responseJSON?.error || 'Please check if environment variables are set in Heroku'));
-                });
+            window.location.href = '/oauth2/authorization/salesforce-prod';
         });
         
         $('#login-sandbox').click(function() {
             console.log('Sandbox login button clicked');
-            $.get('/api/oauth/login/sandbox')
-                .done(function(data) {
-                    console.log('Sandbox login response:', data);
-                    window.location.href = data.loginUrl;
-                })
-                .fail(function(xhr, status, error) {
-                    console.error('Sandbox login failed:', xhr.responseText);
-                    alert('Login failed: ' + (xhr.responseJSON?.error || 'Please check if environment variables are set in Heroku'));
-                });
+            window.location.href = '/oauth2/authorization/salesforce-sandbox';
         });
         
         // Handle logout

@@ -19,28 +19,35 @@ The application is deployed at: [https://perm-comparator-reloaded-ef9f76256418.h
 Before using the application, you need to create a Connected App in Salesforce:
 
 1. **In Salesforce Setup:**
-   - Go to App Manager → New Connected App
-   - Fill in basic information (name, email, etc.)
-   - Enable OAuth Settings
-   - Select OAuth Scopes: `Full access (full)`, `Refresh token (refresh_token)`
-   - Set callback URL to any valid URL (not used in this flow)
-   - Save and note your **Consumer Key** (Client ID) and **Consumer Secret**
+   - Go to **Setup** → **App Manager** → **New Connected App**
+   - Fill in basic information (Connected App Name, API Name, Contact Email)
+   - Check **"Enable OAuth Settings"**
+   - Add **Callback URLs**:
+     ```
+     https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-prod
+     https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-sandbox
+     ```
+   - Select **OAuth Scopes**: `Full access (full)` and `Refresh token (refresh_token)`
+   - Save the Connected App
 
-2. **Get Your Credentials:**
-   - **Client ID**: The Consumer Key from your Connected App
-   - **Client Secret**: The Consumer Secret from your Connected App
-   - **Instance URL**: Your Salesforce org URL (e.g., `https://yourcompany.my.salesforce.com`)
+2. **Get Your Connected App Credentials:**
+   - Go to **App Manager** and click **"View"** on your Connected App
+   - Copy the **Consumer Key** (this becomes your `SALESFORCE_CLIENT_ID`)
+   - Copy the **Consumer Secret** (this becomes your `SALESFORCE_CLIENT_SECRET`)
+
+3. **Configure Heroku Environment Variables:**
+   ```bash
+   heroku config:set SALESFORCE_CLIENT_ID="your_consumer_key_here" --app perm-comparator-reloaded
+   heroku config:set SALESFORCE_CLIENT_SECRET="your_consumer_secret_here" --app perm-comparator-reloaded
+   ```
 
 ### 2. Access the Application
-1. Navigate to the application URL
-2. Select your Salesforce environment:
-   - **Production**: For production orgs (login.salesforce.com)
-   - **Sandbox**: For sandbox orgs (test.salesforce.com) 
-   - **Custom Domain**: For custom Salesforce domains
-3. Enter your Connected App credentials:
-   - Client ID (Consumer Key)
-   - Client Secret (Consumer Secret)
-4. Click "Connect to Salesforce"
+1. Navigate to the application URL: https://perm-comparator-reloaded-ef9f76256418.herokuapp.com
+2. Click either:
+   - **"Login Production"** - For production Salesforce orgs
+   - **"Login Sandbox"** - For sandbox Salesforce orgs
+3. You'll be redirected to Salesforce to authenticate
+4. After successful login, you'll be returned to the application with access to the API endpoints
 
 ### 3. Use Permission Comparison Features
 Once authenticated, you can access:
@@ -150,14 +157,32 @@ The application includes the necessary Heroku configuration:
 ## Troubleshooting
 
 ### Common Issues
-1. **"Authentication failed"**: Check your Connected App credentials and ensure the app is approved for use
-2. **"Instance URL not found"**: Verify your Salesforce org URL format
-3. **CORS errors**: Ensure you're accessing the app over HTTPS in production
+
+1. **Login buttons don't work / nothing happens when clicking them:**
+   - **Solution**: You need to set up the Salesforce Connected App and environment variables first
+   - Visit `/setup.html` on your deployed app for detailed setup instructions
+   - Make sure both `SALESFORCE_CLIENT_ID` and `SALESFORCE_CLIENT_SECRET` are set in Heroku
+
+2. **"redirect_uri_mismatch" error:**
+   - **Solution**: Check that your Connected App callback URLs exactly match:
+     ```
+     https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-prod
+     https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/login/oauth2/code/salesforce-sandbox
+     ```
+
+3. **"invalid_client_id" or "invalid_client" error:**
+   - **Solution**: Verify your `SALESFORCE_CLIENT_ID` and `SALESFORCE_CLIENT_SECRET` are correct
+   - Check that your Connected App is saved and deployed
+
+4. **"insufficient_scope" error:**
+   - **Solution**: Ensure your Connected App has these OAuth Scopes:
+     - `Full access (full)`
+     - `Refresh token (refresh_token)`
 
 ### Getting Help
-- Check Heroku logs: `heroku logs --tail --app your-app-name`
-- Verify your Connected App settings in Salesforce Setup
-- Ensure your org allows API access
+- Check Heroku logs: `heroku logs --tail --app perm-comparator-reloaded`
+- Visit the setup page: `https://perm-comparator-reloaded-ef9f76256418.herokuapp.com/setup.html`
+- Verify your Connected App settings in Salesforce Setup → App Manager
 
 ## Contributing
 1. Fork the repository
