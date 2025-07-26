@@ -157,10 +157,6 @@ public class Application extends Controller {
 	public static void sforceLogout() {
 		String instanceURL = null;
 		
-		// remove user perms from cache on logout
-		Cache.delete(session.getId() + "-oauth");
-		Cache.delete(session.getId() + "-userperms");
-		
 		if (ForceDotComOAuth2.isLoggedIn()) {
 			instanceURL = ForceDotComOAuth2.getOAuthSession().instance_url;
 			ForceDotComOAuth2.logout();
