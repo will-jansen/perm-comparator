@@ -297,8 +297,12 @@
 
     <script>
     $(document).ready(function() {
-        // Check authentication on page load
-        checkAuthAndRedirect();
+        console.log('Compare page loaded');
+        
+        // Check authentication on page load (with delay to prevent immediate redirect)
+        setTimeout(function() {
+            checkAuthAndRedirect();
+        }, 100);
         
         // Load data for selectors
         loadUsers();
@@ -334,19 +338,38 @@
 
     function checkAuthAndRedirect() {
         $.get('/api/oauth/me')
-            .fail(function() {
-                // Not authenticated, redirect to home
-                window.location.href = '/';
+            .done(function(data) {
+                console.log('Authentication check successful:', data);
+            })
+            .fail(function(xhr, status, error) {
+                console.log('Authentication check failed:', status, error);
+                
+                // Only redirect if it's actually an auth failure (401), not a network error
+                if (xhr.status === 401) {
+                    console.log('User not authenticated, redirecting to home');
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    console.log('Network error, but not redirecting');
+                    showError('user-selectors', 'Authentication check failed. Please refresh the page.');
+                }
             });
     }
 
     function loadUsers() {
         $.get('/api/users')
             .done(function(users) {
+                console.log('Users loaded:', users.length);
                 populateSelector(['user1', 'user2', 'user3', 'user4'], users, 'Select a user...');
             })
-            .fail(function() {
-                showError('user-selectors', 'Failed to load users. Please check your connection.');
+            .fail(function(xhr, status, error) {
+                console.log('Failed to load users:', status, error);
+                if (xhr.status === 401) {
+                    window.location.href = '/';
+                } else {
+                    showError('user-selectors', 'Failed to load users. Please check your connection.');
+                }
             });
     }
 
